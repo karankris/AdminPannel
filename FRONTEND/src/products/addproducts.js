@@ -79,7 +79,7 @@ function Addproduct() {
         };
         reader.readAsDataURL(file);
       } else {
-        setFileError('Invalid file type. Please select a PNG, JPG, or JPEG file.');
+        setFileError('Invalid file type added. Please select a PNG, JPG, or JPEG file.');
         setSelectedFile(null);
         setImagePreview(null);
       }
