@@ -5,9 +5,19 @@ var app = express()
 app.use(cors()) 
 const mongoose = require('mongoose');
 const port = 3001
-mongoose.connect('mongodb://127.0.0.1:27017/admin', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.log(err));
+// mongoose.connect('mongodb+srv://Karan_R:Karan@3009@cluster0.btt0kck.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+try{
+  mongoose.connect('mongodb+srv://Karan_R:Karan3009@cluster0.btt0kck.mongodb.net/AdminPannel?retryWrites=true&w=majority&appName=Cluster0')
+  .then(() => console.log('Connected!'))
+  .catch((err)=>{
+    console.log("Database not connected")
+  })
+
+}catch(err){
+  console.log("Db not connected")
+}
+  // .then(() => console.log('MongoDB connected'))
+  // .catch((err) => console.log(err));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
