@@ -22,39 +22,39 @@ const upload = multer({
 const fs = require('fs');
 const path = require('path');
 
-Router.get('/', async (req, res) => {
-  let token = req.headers.authorization;
-  console.log("--token---", token);  
+// Router.get('/', async (req, res) => {
+//   let token = req.headers.authorization;
+//   console.log("--token---", token);  
 
-  let decoded = jwt.verify(token, 'Karanadmin@0930');
-  if (decoded) {
-    const allProduct = await ProductModel.find();
-    if (!allProduct) {
-      return res.send({ status: 0, message: 'No Products Found' });
-    }
+//   let decoded = jwt.verify(token, 'Karanadmin@0930');
+//   if (decoded) {
+//     const allProduct = await ProductModel.find();
+//     if (!allProduct) {
+//       return res.send({ status: 0, message: 'No Products Found' });
+//     }
 
-    // Process each product to include image URL or base64 representation
+//     // Process each product to include image URL or base64 representation
  
-    const productsWithImages = allProduct.map(product => {
-      const imagePath = path.join(__dirname, '../productdata', product.image); // Assuming your images are stored in 'uploads' folder
-      const imageBase64 = fs.readFileSync(imagePath, 'base64');
-      const imageUrl = `data:image/jpeg;base64,${imageBase64}`;
+//     const productsWithImages = allProduct.map(product => {
+//       const imagePath = path.join(__dirname, '../productdata', product.image); // Assuming your images are stored in 'uploads' folder
+//       const imageBase64 = fs.readFileSync(imagePath, 'base64');
+//       const imageUrl = `data:image/jpeg;base64,${imageBase64}`;
 
-      return {
-        _id: product._id, 
-        p_name: product.p_name, 
-        p_discription: product.p_discription,
-        p_stocks: product.p_stocks, 
-        p_price: product.p_price,
-        image: imageUrl, // or use 'imageBase64' for base64 representation
-      };
-    });
+//       return {
+//         _id: product._id, 
+//         p_name: product.p_name, 
+//         p_discription: product.p_discription,
+//         p_stocks: product.p_stocks, 
+//         p_price: product.p_price,
+//         image: imageUrl, // or use 'imageBase64' for base64 representation
+//       };
+//     });
 
-    res.send({ status: 1, message: 'Products fetched successfully', productData: productsWithImages, token: token });
-  } else {
-    res.send({ status: 0, message: 'Invalid Token' });
-  }
-});
+//     res.send({ status: 1, message: 'Products fetched successfully', productData: productsWithImages, token: token });
+//   } else {
+//     res.send({ status: 0, message: 'Invalid Token' });
+//   }
+// });
      
 // // define the home page route
 // Router.get('/', async (req, res) => {
@@ -63,6 +63,56 @@ Router.get('/', async (req, res) => {
 // });
 
 // define the about route
+
+
+Router.get('/', async (req, res) => {
+  let token = req.headers.authorization;
+  console.log("--token---", token);
+
+  try {
+    let decoded = jwt.verify(token, 'Karanadmin@0930');
+    if (decoded) {
+      const allProduct = await ProductModel.find();
+      if (!allProduct) {
+        return res.send({ status: 0, message: 'No Products Found' });
+      }
+
+      // Process each product to include image URL or base64 representation
+      const productsWithImages = allProduct.map(product => {
+        const imagePath = path.join(__dirname, '../productdata', product.image); // Assuming your images are stored in 'productdata' folder
+
+        // let imageUrl = null; // Initialize imageUrl to null
+
+        if (fs.existsSync(imagePath)) {
+          const imageBase64 = fs.readFileSync(imagePath, 'base64');
+          imageUrl = `data:image/jpeg;base64,${imageBase64}`;
+        } else {
+          console.error(`Image file not found: ${imagePath}`);
+          // You can set a default image URL or handle the case as needed
+          imageUrl = 'path/to/default-image.jpg'; // Replace with your actual default image path or URL
+        }
+
+        return {
+          _id: product._id,
+          p_name: product.p_name,
+          p_discription: product.p_discription,
+          p_stocks: product.p_stocks,
+          p_price: product.p_price,
+          image: imageUrl, // This will now either be the base64 string or a default image
+        };
+      });
+
+      res.send({ status: 1, message: 'Products fetched successfully', productData: productsWithImages, token: token });
+    } else {
+      res.send({ status: 0, message: 'Invalid Token' });
+    }
+  } catch (error) {
+    console.error('Error processing products:', error);
+    res.status(500).send({ status: 0, message: 'Internal Server Error' });
+  }
+});
+
+
 Router.post('/addProduct', upload.single('image'), async (req, res) => {
   try {
     console.log("Product", req.body); 
@@ -134,6 +184,7 @@ Router.put('/updateProduct/:id', upload.single('image') ,async (req, res) => {
     product.p_discription = req.body.discription || product.p_discription;
     product.p_stocks = req.body.stocks || product.p_stocks;
     product.p_price = req.body.cost || product.p_price; 
+
     if (req.file) {
       const imagePath = path.join(__dirname, '../productdata', product.image);
       fs.unlinkSync(imagePath);

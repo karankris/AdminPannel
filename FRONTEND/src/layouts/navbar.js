@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // import Navbar from 'react-bootstrap/Navbar';
 import swal from 'sweetalert';
+import { Link } from "react-router-dom";
 function Nav()
 {
     const [isToggled, setIsToggled] = useState(false);
@@ -41,21 +42,21 @@ var User = localStorage.getItem('User');
           onClick={click} id="sidebarToggle"></i>    
     {/* <i className="fa-solid fa-backward back"id="sidebarToggle" onClick={click}></i> */}
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon nav_icon"></span></button>
-    <div className="collapse navbar-collapse nav_c rounded px-5" id="navbarSupportedContent">
-        <ul className="navbar-nav ms-auto mt-2 mt-lg-0 ">
-            <li className="nav-item active me-3 "><a className="nav-link l-clr" href="#!"><i className="fa-solid fa-house"></i> Home</a></li>
-            <li className="nav-item"><a className="nav-link me-3 l-clr" href="#!"><i className="fa-solid fa-user profile lgo"></i> {User} </a></li>
+    <div className="collapse navbar-collapse nav_c rounded px-2 " id="navbarSupportedContent">
+        <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
+            <li className="nav-item me-3 nav-link l-clr"><i className="fa-solid fa-house"></i><Link  className="list-unstyled ms-2 l-clr"to="/">Home</Link></li>
+            <li className="nav-item"><a className="nav-link  l-clr" href="#!"><i className="fa-solid fa-user profile lgo"></i> {User} </a></li>
             <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle me-3 l-clr" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
-                <div className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <a className="dropdown-item" href="#!">Users</a>
+                <a className="nav-link dropdown-toggle me-3 l-clr ms-1" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
+                <div className="dropdown-menu dropdown-menu-end  nav_c_inner" aria-labelledby="navbarDropdown">
+                    <a className="dropdown-item"><Link  className="list-unstyled l-clr"to="/users">Users</Link></a>
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#!">Products</a>
+                    <a className="dropdown-item" ><Link  className="list-unstyled l-clr"to="/products">Products</Link></a>
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#!">Vendors</a>
+                    <a className="dropdown-item"><Link  className="list-unstyled l-clr"to="/vendor">Vendors</Link></a>
                 </div>
             </li>
-            <li className="nav-item active me-3" style={{cursor:'pointer'}}><a className="nav-link l-clr" onClick={logout}><i className="fa-solid fa-right-from-bracket "></i> Signout</a></li>
+            <li className="nav-item active me-3 ms-1" style={{cursor:'pointer'}}><a className="nav-link l-clr" onClick={logout}><i className="fa-solid fa-right-from-bracket "></i> Signout</a></li>
         </ul>
     </div>
 </div>

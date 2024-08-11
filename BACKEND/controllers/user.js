@@ -23,39 +23,84 @@ const upload = multer({
   // define the home page route
   const fs = require('fs');
   const path = require('path');
-  Router.get('/' , async (req,res)=>{
-    let token = req.headers.authorization;
-    console.log("--token---",token);
+  // Router.get('/' , async (req,res)=>{
+  //   let token = req.headers.authorization;
+  //   console.log("--token---",token);
   
-     let decoded =  jwt.verify(token,'Karanadmin@0930') 
-     if (decoded) {
-      const allUsers = await UserModel.find();
-      if (!allUsers) {
-          return res.send({ status: 0, message: 'No Users Found'});
+  //    let decoded =  jwt.verify(token,'Karanadmin@0930') 
+  //    if (decoded) {
+  //     const allUsers = await UserModel.find();
+  //     if (!allUsers) {
+  //         return res.send({ status: 0, message: 'No Users Found'});
+  //     }
+
+  //     // Process each user to include image URL or base64 representation
+  //     const usersWithImages = allUsers.map(user => {
+  //       const imagePath = path.join(__dirname, '../uploads', user.image); // Assuming your images are stored in 'uploads' folder
+  //       const imageBase64 = fs.readFileSync(imagePath, 'base64');
+  //       const imageUrl =  `data:image/jpeg;base64,${imageBase64}`; 
+
+  //       return {
+  //         _id: user._id,
+  //         user_name: user.user_name,
+  //         mail: user.mail,
+  //         phone: user.phone,
+  //         image: imageUrl, // or use 'imageBase64' for base64 representation
+  //       };  
+  //     });
+
+  //     res.send({ status: 1, message: 'Users fetched successfully', userData: usersWithImages, token: token });
+  // } else {
+  //     res.send({ status: 0, message: 'Invalid Token'});
+  // }
+  // });
+
+  Router.get('/', async (req, res) => {
+    let token = req.headers.authorization;
+    console.log("--token---", token);
+  
+    try {
+      let decoded = jwt.verify(token, 'Karanadmin@0930');
+      if (decoded) {
+        const allUsers = await UserModel.find();
+        if (!allUsers || allUsers.length === 0) {
+          return res.send({ status: 0, message: 'No Users Found' });
+        }
+  
+        // Process each user to include image URL or base64 representation
+        const usersWithImages = allUsers.map(user => {
+          const imagePath = path.join(__dirname, '../uploads', user.image); // Assuming your images are stored in 'uploads' folder
+          
+          // let imageUrl = null; // Initialize imageUrl to null
+  
+          if (fs.existsSync(imagePath)) {
+            const imageBase64 = fs.readFileSync(imagePath, 'base64');
+            imageUrl = `data:image/jpeg;base64,${imageBase64}`;
+          } else {
+            console.error(`Image file not found: ${imagePath}`);
+            // You can set a default image URL or handle the case as needed
+            imageUrl = 'path/to/default-image.jpg'; // Replace with your actual default image path or URL
+          }
+  
+          return {
+            _id: user._id,
+            user_name: user.user_name,
+            mail: user.mail,
+            phone: user.phone,
+            image: imageUrl, // This will now either be the base64 string or a default image
+          };
+        });
+  
+        res.send({ status: 1, message: 'Users fetched successfully', userData: usersWithImages, token: token });
+      } else {
+        res.send({ status: 0, message: 'Invalid Token' });
       }
-
-      // Process each user to include image URL or base64 representation
-      const usersWithImages = allUsers.map(user => {
-        const imagePath = path.join(__dirname, '../uploads', user.image); // Assuming your images are stored in 'uploads' folder
-        const imageBase64 = fs.readFileSync(imagePath, 'base64');
-        const imageUrl =  `data:image/jpeg;base64,${imageBase64}`; 
-
-        return {
-          _id: user._id,
-          user_name: user.user_name,
-          mail: user.mail,
-          phone: user.phone,
-          image: imageUrl, // or use 'imageBase64' for base64 representation
-        };  
-      });
-
-      res.send({ status: 1, message: 'Users fetched successfully', userData: usersWithImages, token: token });
-  } else {
-      res.send({ status: 0, message: 'Invalid Token'});
-  }
+    } catch (error) {
+      console.error('Error processing users:', error);
+      res.status(500).send({ status: 0, message: 'Internal Server Error' });
+    }
   });
-
-
+  
   Router.post('/addUser', upload.single('image'), async (req, res) => {
     try {
       console.log("User", req.body);
