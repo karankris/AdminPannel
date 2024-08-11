@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const port = 3001
 // mongoose.connect('mongodb+srv://Karan_R:Karan@3009@cluster0.btt0kck.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 try{
-  mongoose.connect('mongodb+srv://Karan_R:Karan3009@cluster0.btt0kck.mongodb.net/AdminPannel?retryWrites=true&w=majority&appName=Cluster0')
+  mongoose.connect('mongodb+srv://Karan_R:Karan3009@cluster0.btt0kck.mongodb.net/AdminPannel?retryWrites=true&w=majority&appName=Cluster0',{ useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected!'))
   .catch((err)=>{
     console.log("Database not connected")
