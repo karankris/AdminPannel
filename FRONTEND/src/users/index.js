@@ -21,7 +21,7 @@ function User() {
   const authuser = { 'authorization': localStorage.getItem('authToken') };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/users', { headers: authuser }) // user auth
+    axios.get('https://adminpannel.onrender.com/users', { headers: authuser }) // user auth
       .then(function (response) {
         setUsers(response.data.userData);
         console.log("get meth",response);
@@ -52,7 +52,7 @@ function User() {
       .then(async (userConfirmed) => {
         if (userConfirmed) {
           try {
-            const response = await axios.delete(`http://localhost:3001/users/deleteUser/${id}`, { headers: authuser });
+            const response = await axios.delete(`https://adminpannel.onrender.com/users/deleteUser/${id}`, { headers: authuser });
             if (response.status === 204) {
               // Remove the deleted user from the state
               setUsers(prevUsers => prevUsers.filter(user => user._id !== id));
@@ -110,14 +110,14 @@ function User() {
         formData.append('image', editUser.image);
       }
 
-      const response = await axios.put(`http://localhost:3001/users/updateUser/${selectedUser._id}`, formData, { headers: authuser });
+      const response = await axios.put(`https://adminpannel.onrender.com/users/updateUser/${selectedUser._id}`, formData, { headers: authuser });
        
       if (response.status === 200) {
         // Update the user in the state
         setUsers(prevUsers => prevUsers.map(user => {
           return user._id === selectedUser._id ? response.data.updatedUser : user;
         }));
-        axios.get('http://localhost:3001/users', { headers: authuser }) // user auth
+        axios.get('https://adminpannel.onrender.com/users', { headers: authuser }) // user auth
         .then(function (response) {
           setUsers(response.data.userData);
           console.log("get meth",response);

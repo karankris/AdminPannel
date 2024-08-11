@@ -8,7 +8,7 @@ export const AC_ADD_PRODUCT =(productdata)  => {
     formData.append('stocks', productdata.stocks);
     formData.append('image', productdata.image);
 
-    axios.post('http://localhost:3001/products/addProduct',formData)
+    axios.post('https://adminpannel.onrender.com/products/addProduct',formData)
       .then((response) => {
         dispatch({type:"ADD_PRODUCT",payload:response.data});
         console.log("------", response.data);

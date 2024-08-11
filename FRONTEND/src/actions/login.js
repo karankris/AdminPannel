@@ -3,7 +3,7 @@
 // export const AC_ADD_LOGIN =(loginDetails) =>{
 //     console.log('-------',loginDetails);
 //     return (dispatch) => {
-//         axios.post('http://localhost:3001/auth/login',loginDetails)
+//         axios.post('https://adminpannel.onrender.com/auth/login',loginDetails)
 //           .then((response) => {            
 //             // dispatch({type:"ADD_LOGIN",payload:response});
 //             console.log("------",response.data);

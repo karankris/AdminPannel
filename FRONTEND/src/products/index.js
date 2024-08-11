@@ -22,7 +22,7 @@ function Product() {
   const authuser = { 'authorization': localStorage.getItem('authToken') };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/products', { headers: authuser })
+    axios.get('https://adminpannel.onrender.com/products', { headers: authuser })
       .then(function (response) {
         setProducts(response.data.productData);
         console.log("get meth", response);
@@ -51,7 +51,7 @@ function Product() {
       .then(async (userConfirmed) => {
         if (userConfirmed) {
           try {
-            const response = await axios.delete(`http://localhost:3001/products/deleteProduct/${id}`, { headers: authuser });
+            const response = await axios.delete(`https://adminpannel.onrender.com/products/deleteProduct/${id}`, { headers: authuser });
             if (response.status === 204) {
               setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
               swal("Deleted!", "Product deleted!", "success");
@@ -104,13 +104,13 @@ function Product() {
         formData.append('image', editProduct.image);
       }
 
-      const response = await axios.put(`http://localhost:3001/products/updateProduct/${selectedProduct._id}`, formData, { headers: authuser });
+      const response = await axios.put(`https://adminpannel.onrender.com/products/updateProduct/${selectedProduct._id}`, formData, { headers: authuser });
 
       if (response.status === 200) {
         setProducts(prevProducts => prevProducts.map(product => {
           return product._id === selectedProduct._id ? response.data.updatedProduct : product;
         }));
-        axios.get('http://localhost:3001/products', { headers: authuser })
+        axios.get('https://adminpannel.onrender.com/products', { headers: authuser })
           .then(function (response) {
             setProducts(response.data.productData);
             console.log("get meth", response);

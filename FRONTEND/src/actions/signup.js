@@ -2,7 +2,7 @@ import axios from "axios";
 export const AC_ADD_ADMIN =(loginData) =>{
     console.log('-------',loginData);
     return (dispatch) => {
-        axios.post('http://localhost:3001/auth/register',loginData)
+        axios.post('https://adminpannel.onrender.com/auth/register',loginData)
           .then((response) => {            
             dispatch({type:"ADD_ADMIN",payload:response});
             // console.log("------",response);

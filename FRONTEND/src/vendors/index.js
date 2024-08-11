@@ -19,7 +19,7 @@ function Vendor() {
   });
   const authuser = { 'authorization': localStorage.getItem('authToken') };
   useEffect(() => {
-    axios.get('http://localhost:3001/vendors',{ headers: authuser })
+    axios.get('https://adminpannel.onrender.com/vendors',{ headers: authuser })
       .then(function (response) {
         setVendors(response.data.vendorData)
         console.log(response);
@@ -49,7 +49,7 @@ function Vendor() {
       .then(async (userConfirmed) => {
         if (userConfirmed) {
           try {
-            const response = await axios.delete(`http://localhost:3001/vendors/deleteVendor/${id}`);
+            const response = await axios.delete(`https://adminpannel.onrender.com/vendors/deleteVendor/${id}`);
             if (response.status === 204) {
               // Remove the deleted vendor from the state
               setVendors(prevVendors => prevVendors.filter(vendor => vendor._id !== id));
@@ -83,7 +83,7 @@ function Vendor() {
 
   const handleModalSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:3001/vendors/updateVendor/${selectedVendor._id}`, {
+      const response = await axios.put(`https://adminpannel.onrender.com/vendors/updateVendor/${selectedVendor._id}`, {
         vendor_name: editVendor.vendor_name,
         vendor_mailid: editVendor.vendor_mailid,
         vendor_mobile: editVendor.vendor_mobile,
