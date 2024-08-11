@@ -14,7 +14,7 @@ try{
   })
 
 }catch(err){
-  console.log("Db not connected")
+  console.log("Db is not  connected")
 }
   // .then(() => console.log('MongoDB connected'))
   // .catch((err) => console.log(err));
